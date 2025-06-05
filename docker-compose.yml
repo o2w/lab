@@ -3,20 +3,20 @@ services:
   author:
     image: author{{AEM_VERSION}}
     build: {{MAKE_ROOT}}/author
-    network_mode: "host"
-      #ports:
-      #  - "4502:4502"
+    network_mode: bridge
+    ports:
+      - "4502:4502"
   publish:
     image: publish{{AEM_VERSION}}
     build: {{MAKE_ROOT}}/publish
-    network_mode: "host"
-      #ports:
-      #  - "4503:4503"
+    network_mode: bridge
+    ports:
+      - "4503:4503"
   dispatcher:
     image: dispatcher{{AEM_VERSION}}
     build: {{MAKE_ROOT}}/dispatcher
-    network_mode: "host"
-      #ports:
-      #  - "80:80"
+    network_mode: bridge
+    ports:
+      - "80:80"
     depends_on:
       - "publish"
