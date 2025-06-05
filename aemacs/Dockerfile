@@ -29,6 +29,7 @@ RUN update-alternatives --install /usr/bin/java java "`ls /usr/lib/jvm/* | grep 
 RUN node -v
 RUN mvn -v
 
+#https://experienceleague.adobe.com/en/docs/experience-manager-65/content/implementing/deploying/deploying/custom-standalone-install#further-options-available-from-the-quickstart-file
 # https://stackoverflow.com/questions/43655291/dynamically-set-java-home-of-docker-container
 RUN export JAVA_HOME="`ls /usr/lib/jvm/* | grep oracle | sort | tr -d ':' | head -n1`" && \
     echo $JAVA_HOME && \
