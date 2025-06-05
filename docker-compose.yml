@@ -3,20 +3,16 @@ services:
   author:
     image: author{{AEM_VERSION}}
     build: {{MAKE_ROOT}}/author
-    network_mode: bridge
-    ports:
-      - "4502:4502"
+    #https://matsuand.github.io/docs.docker.jp.onthefly/network/network-tutorial-host/
+    #docker run --rm -d  -p 8080:80 --network host --name `mktemp -u tmp_XXXX_`nginx nginx
+    network_mode: host
   publish:
     image: publish{{AEM_VERSION}}
     build: {{MAKE_ROOT}}/publish
-    network_mode: bridge
-    ports:
-      - "4503:4503"
+    network_mode: host
   dispatcher:
     image: dispatcher{{AEM_VERSION}}
     build: {{MAKE_ROOT}}/dispatcher
-    network_mode: bridge
-    ports:
-      - "80:80"
+    network_mode: host
     depends_on:
       - "publish"
