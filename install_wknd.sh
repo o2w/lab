@@ -13,15 +13,15 @@ await6x() {
 
   while true; do
     docker ps | grep acs && break
-    curl -u admin:admin -F cmd=ls http://localhost:$port/crx/packmgr/service.jsp | grep '<name>aem-service-pkg' && break
+    curl -s -u admin:admin -F cmd=ls http://localhost:$port/crx/packmgr/service.jsp | grep '<name>aem-service-pkg' && break
     echo "Awaiting service pacakge installation" >&2
     sleep 250
 	done
 
   while true; do
     sleep 2
-    curl -u admin:admin http://localhost:$port/crx/packmgr/service.jsp > /dev/null || continue
-    if curl -u admin:admin http://localhost:$port/crx/packmgr/service.jsp | grep -iE '<status code="?200"?>ok' ; then
+    curl -s -u admin:admin http://localhost:$port/crx/packmgr/service.jsp > /dev/null || continue
+    if curl -s -u admin:admin http://localhost:$port/crx/packmgr/service.jsp | grep -iE '<status code="?200"?>ok' ; then
       break
     fi
     echo "Awaiting until package manager is up" >&2
