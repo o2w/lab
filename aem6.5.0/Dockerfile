@@ -1,5 +1,4 @@
-# Using 'ubuntu' as the base image here
-FROM ubuntu
+FROM debian
 
 ARG JAVADEB
 

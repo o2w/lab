@@ -1,5 +1,5 @@
 # Using 'ubuntu' as the base image here
-FROM ubuntu
+FROM debian
 ARG ACSSDK
 ARG JAVADEB
 
@@ -22,12 +22,11 @@ COPY ${JAVADEB} /tmp/jdk-11.x.xx_linux-x64_bin.deb
 # Install Java
 # https://stackoverflow.com/a/54925400
 RUN apt-get update
-RUN apt-get install -y nodejs maven
+RUN apt-get install -y nodejs
 RUN dpkg -i /tmp/jdk-11.x.xx_linux-x64_bin.deb
 RUN update-alternatives --install /usr/bin/java java "`ls /usr/lib/jvm/* | grep oracle | sort | tr -d ':' | head -n1`"/bin/java 11111
 
 RUN node -v
-RUN mvn -v
 
 #https://experienceleague.adobe.com/en/docs/experience-manager-65/content/implementing/deploying/deploying/custom-standalone-install#further-options-available-from-the-quickstart-file
 # https://stackoverflow.com/questions/43655291/dynamically-set-java-home-of-docker-container
