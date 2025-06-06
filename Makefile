@@ -12,6 +12,7 @@ test: ## print test message
 
 aem: ## Build base image of AEM
 	@cd ./aem${AEM}; ls aem-sdk-2*.zip | xargs -I{} unzip -n {}
+	@cd ./aem${AEM}; ls cq-quickstart*.zip | xargs -I{} unzip -n {}
 	@javadeb=`cd ./aem${AEM}; ls | sort | grep -E '(jdk-11.*\.deb|jdk-8.*\.tar\.gz)' | tail -n1` && \
 		acssdk=`cd ./aemacs; ls | sort | grep 'aem-sdk-quickstart' | tail -n1` && \
 		echo $$javadeb && \
