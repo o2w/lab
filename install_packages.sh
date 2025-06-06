@@ -16,8 +16,8 @@ install_package() {
   #await until package manager is up
   while true; do
     sleep 2
-    curl -u admin:admin http://localhost:$port/crx/packmgr/service.jsp > /dev/null || continue
-    if curl -u admin:admin http://localhost:$port/crx/packmgr/service.jsp | grep -iE '<status code="?200"?>ok' ; then
+    curl -s -u admin:admin http://localhost:$port/crx/packmgr/service.jsp > /dev/null || continue
+    if curl -s -u admin:admin http://localhost:$port/crx/packmgr/service.jsp | grep -iE '<status code="?200"?>ok' ; then
       break
     fi
     echo "Awaiting until package manager is up" >&2
@@ -30,9 +30,8 @@ install_package() {
   echo "awaiting package installation"
   sleep 24
   while true; do
-    sleep 8
-    curl -u admin:admin http://localhost:$port/crx/packmgr/service.jsp > /dev/null || continue
-    curl -u admin:admin http://localhost:$port/crx/packmgr/service.jsp | grep -iE '<status code="?200"?>ok' && break
+    #curl -s -u admin:admin http://localhost:$port/crx/packmgr/service.jsp || continue
+    curl -s -u admin:admin http://localhost:$port/crx/packmgr/service.jsp | grep -iE '<status code="?200"?>ok' && break
     echo "still awaiting package installation"
     sleep 8
   done
