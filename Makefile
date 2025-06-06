@@ -44,6 +44,9 @@ init: ## Initiate a set of instances/containers
 		dir=dispatcher; mkdir -p $$dir && cp -a ${MAKE_ROOT}/$$dir/Dockerfile ./$$dir && \
 		docker compose up
 
+#Replecation agent
+#https://experienceleague.adobe.com/en/docs/experience-manager-65/content/implementing/deploying/configuring/replication#replication-out-of-the-box
+
 #Access below url to browse what's up
 #http://localhost:4502/libs/granite/operations/content/systemoverview.html
 
