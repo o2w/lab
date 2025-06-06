@@ -46,6 +46,8 @@ init: ## Initiate a set of instances/containers
 
 #Replecation agent
 #https://experienceleague.adobe.com/en/docs/experience-manager-65/content/implementing/deploying/configuring/replication#replication-out-of-the-box
+#http://localhost:4502/etc/replication/agents.author/publish.html
+#http://localhost:4502/etc/replication/agents.author/publish.test.html
 
 #Access below url to browse what's up
 #http://localhost:4502/libs/granite/operations/content/systemoverview.html
@@ -60,8 +62,14 @@ rm: ## Remove all images available. Beaware not only the one made from this scri
 	-@docker system prune -a
 	-@docker builder prune
 
+softrm:
+	@docker image ls -a | grep none | awk '{print $3}' | xargs -I{} docker image rm -f {}
+
 login:
 	@docker exec -it $(shell docker ps | grep author | awk '{print $$1}') /bin/bash
+
+loginpub:
+	@docker exec -it $(shell docker ps | grep publish | awk '{print $$1}') /bin/bash
 
 up: # Create a copy of containers from existing ones and launch. Originals would completely kept behind and temporal containers will be gone in the end
 	@make -s prepare-docker-compose-yml
