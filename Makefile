@@ -66,10 +66,18 @@ softrm:
 	@docker image ls -a | grep none | awk '{print $3}' | xargs -I{} docker image rm -f {}
 
 login:
-	@docker exec -it $(shell docker ps | grep author | awk '{print $$1}') /bin/bash
+	@docker exec -it $(shell docker ps | grep author | awk '{print $$1}') /bin/bash 
 
 loginpub:
 	@docker exec -it $(shell docker ps | grep publish | awk '{print $$1}') /bin/bash
+
+#https://unix.stackexchange.com/questions/399438/difference-between-kill-9-pid-and-kill-int-pid
+#https://gist.github.com/munim/1c10ab3daa15994a5354e82ac02962c6
+grace:
+	-@docker exec -it $(shell docker ps | grep author | awk '{print $$1}') /bin/bash "sed -E -e 's/^[[:blank:]]+//g' -e 's/[[:blank:]]+/,/g' | cut -d',' -f2"
+	#-@docker exec -it $(shell docker ps | grep publish | awk '{print $$1}') /bin/bash "lsof -i | grep -iE '450[2,3]' | awk '{print $$2}' | uniq | while read pid; do kill -INT $$pid; done"
+	#lsof -i | grep -iE '450[2,3]' | awk '{print $2}' | uniq | xargs -I{} kill {}
+	#lsof -i | grep -iE '450[2,3]' | awk '{print $2}' | uniq | while read pid; do kill -INT $pid; done
 
 up: # Create a copy of containers from existing ones and launch. Originals would completely kept behind and temporal containers will be gone in the end
 	@make -s prepare-docker-compose-yml

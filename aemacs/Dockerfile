@@ -22,7 +22,7 @@ COPY ${JAVADEB} /tmp/jdk-11.x.xx_linux-x64_bin.deb
 # Install Java
 # https://stackoverflow.com/a/54925400
 RUN apt-get update
-RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs lsof
 RUN dpkg -i /tmp/jdk-11.x.xx_linux-x64_bin.deb
 RUN update-alternatives --install /usr/bin/java java "`ls /usr/lib/jvm/* | grep oracle | sort | tr -d ':' | head -n1`"/bin/java 11111
 
