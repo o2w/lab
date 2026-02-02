@@ -13,7 +13,7 @@ test: ## print test message
 aem: ## Build base image of AEM
 	@cd ./aem${AEM}; ls aem-sdk-2*.zip | xargs -I{} unzip -n {}
 	@cd ./aem${AEM}; ls cq-quickstart*.zip | xargs -I{} unzip -n {}
-	@javadeb=`cd ./aem${AEM}; ls | sort | grep -E '(jdk-11.*\.deb|jdk-8.*\.tar\.gz)' | tail -n1` && \
+	@javadeb=`cd ./aem${AEM}; ls | sort | grep -E '(jdk-.*\.deb|jdk-8.*\.tar\.gz)' | tail -n1` && \
 		acssdk=`cd ./aemacs; ls | sort | grep 'aem-sdk-quickstart' | tail -n1` && \
 		echo $$javadeb && \
 		echo $$acssdk && \
@@ -27,7 +27,7 @@ prepare-docker-compose-yml: ##Create tailord docker-compose.yml for given condit
 
 build: ##execute docker compose with configuration
 	@make -s prepare-docker-compose-yml
-	@docker compose -f ${PREPARED_DOCKER_COMPOSE_YML} build --build-arg AEM=aem${AEM}
+	@docker-compose -f ${PREPARED_DOCKER_COMPOSE_YML} build --build-arg AEM=aem${AEM}
 
 init: ## Initiate a set of instances/containers
 	@make -s aem
@@ -42,7 +42,7 @@ init: ## Initiate a set of instances/containers
 		dir=author; mkdir -p $$dir && cp -a ${MAKE_ROOT}/$$dir/Dockerfile ./$$dir && \
 		dir=publish; mkdir -p $$dir && cp -a ${MAKE_ROOT}/$$dir/Dockerfile ./$$dir && \
 		dir=dispatcher; mkdir -p $$dir && cp -a ${MAKE_ROOT}/$$dir/Dockerfile ./$$dir && \
-		docker compose up
+		docker-compose up
 
 #Replecation agent
 #https://experienceleague.adobe.com/en/docs/experience-manager-65/content/implementing/deploying/configuring/replication#replication-out-of-the-box
@@ -94,6 +94,38 @@ local-author-mac:
 		cp -r ${MAKE_ROOT}/aemacs/install ./crx-quickstart/ && \
 		mv ./cq-quickstart.jar ./aem-author-p4502.jar && \
 		java -jar ./aem-author-p4502.jar -forkargs -- -Xmx2024m
+
+#https://www.kali.org/docs/containers/installing-docker-on-kali/
+#https://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo
+#https://stackoverflow.com/a/77087453
+#https://forums.docker.com/t/cannot-connect-to-docker-daemon-at-unix/136486
+#https://qiita.com/ekzemplaro/items/77ff235d9aec987444d4
+repair-docker:
+	@sudo systemctl stop docker
+	@sudo systemctl stop containerd
+	@sudo rm -rf /var/lib/docker/network
+	@sudo rm /etc/docker/daemon.json
+	@sudo apt remove docker -y
+	@sudo apt remove docker-compose -y
+	@sudo rm /var/run/docker.pid
+	@sudo apt purge docker.io containerd
+	@sudo apt autoremove
+	@rm -rf /home/$(shell whoami)/.docker
+	@rm -rf /home/$(shell whoami)/.local/share/docker
+	@rm -rf /home/$(shell whoami)/.config/docker
+	@sudo apt update && sudo apt install docker.io
+	@sudo systemctl enable docker --now
+	@sudo groupadd docker
+	@sudo gpasswd -a $(shell whoami) docker
+	@docker ps
+	@docker network ls
+	@docker run hello-world
+
+#https://stackoverflow.com/questions/22907231/how-can-i-copy-files-from-a-host-to-a-docker-container
+#cp #https://www.google.com/search?q=transfar+scp+host%27s+folder+to+docker+container
+
+#https://experienceleaguecommunities.adobe.com/adobe-experience-manager-sites-8/how-to-find-out-aem-version-45174?postid=69378#post69378
+#https://experienceleague.adobe.com/ja/docs/experience-cloud-kcs/kbarticles/ka-21738
 
 .PHONY: help
 
