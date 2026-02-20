@@ -81,7 +81,7 @@ grace:
 
 up: # Create a copy of containers from existing ones and launch. Originals would completely kept behind and temporal containers will be gone in the end
 	@make -s prepare-docker-compose-yml
-	-@docker ps -a | grep  -E 'tmp.*${PROJECT}' | awk '{print $$1}' | xargs docker rm
+	-@docker ps -a | grep  -E 'tmp.*${PROJECT}' | awk '{print $$1}' | xargs -I{} docker rm {}
 	@./disposable.sh "${PROJECT}"
 
 local-author-mac:
